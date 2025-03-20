@@ -1,9 +1,58 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import gsap, { SteppedEase } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPathPlugin } from 'gsap/all';
 
+ScrollTrigger.config({ ignoreMobileResize: true });
+gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(MotionPathPlugin);
 const video = ref(null)
+const quests = ref(null)
 onMounted(() => {
-  console.dir()
+  quests.value.forEach((el, index) => {
+    gsap.from(el, {
+      scrollTrigger: {
+        scroller: 'body',
+        trigger: el,
+        start: '-80px 100%',
+        toggleActions:'restart none none none',
+      },
+      x: index % 2 ? -320 : 320,
+      duration: 1.2,
+    });
+  })
+  gsap.from(".card1", {
+    scrollTrigger: {
+      scroller: 'body',
+      start: '-20px 120%',
+      trigger: '.card1',
+      toggleActions:'restart none none none',
+    },
+    duration: 0.8,
+    opacity: 0.2,
+    y: 80,
+  });
+  gsap.from(".card2", {
+    scrollTrigger: {
+      scroller: 'body',
+      start: '-20px 120%',
+      trigger: '.card2',
+      toggleActions:'restart none none none',
+    },
+    duration: 0.8,
+    opacity: 0.2,
+    y: 80,
+  });
+
+  gsap.to(".heart", {
+    duration: 6,
+    motionPath: [{ rotate: 8 }, { rotate: -8 }, { rotate: 8 }],
+    transformOrigin: '50px 60px',
+    yoyo: true,
+    ease: "linear",
+    repeat: -1,
+  });
 })
 
 const handleClickByVideo = () => {
@@ -34,6 +83,11 @@ else {
 const handleClickOpenMap = () => {
   window.open('https://yandex.by/maps/org/agrousadba_malinovka/130558307103/?ll=27.462270%2C52.679237&z=16.26')
 }
+
+const quests_options = [
+  { id: 1, title: 'Цветы', text: 'Если вы планировали взять с собой букет цветов, то бутылочка алкоголя с вашей подписью будет лучшей заменой, так как мы не успеем насладиться красотой цветов до отъезда в путешествие!', flower: true},
+  { id: 1, title: 'Дресс-код', text: 'Мы будем очень признательны, если при выборе нарядов вы отдадите предпочтение нежным пастельным тонам и воздержитесь от ярких цветов.', flower: false},
+]
 </script>
 
 <template>
@@ -48,10 +102,11 @@ const handleClickOpenMap = () => {
       </div>
     </div>
     <div class="after-video">
-      <div class="lexend fz42">Дорогие гости</div>
+      <div class="lexend fz42 header_title">Дорогие гости</div>
       <div class="stand fz14">Мы приглашаем Вас разделить с нами радостный день, в который мы станем семьёй!</div>
     </div>
-    <div class="sheduale heart">
+    <div class="sheduale">
+      <div class="heart"></div>
       <div class="sheduale-weekdays">
         <div class="stand f500">ПН</div>
         <div class="stand f500">ВТ</div>
@@ -62,16 +117,15 @@ const handleClickOpenMap = () => {
         <div class="stand f500">ВС</div>
       </div>
       <div class="sheduale-days">
-        <div class="stand f500">21</div>
-        <div class="stand f500">22</div>
-        <div class="stand f500">23</div>
-        <div class="stand f500">24</div>
-        <div class="stand f500 color-bg">
+        <div class="stand f400">21</div>
+        <div class="stand f400">22</div>
+        <div class="stand f400">23</div>
+        <div class="stand f400">24</div>
+        <div class="stand f600 color-bg">
           25
-          <!-- <img src="./assets/heart.png" alt=""> -->
         </div>
-        <div class="stand f500">26</div>
-        <div class="stand f500">27</div>
+        <div class="stand f600 color-bg">26</div>
+        <div class="stand f400">27</div>
       </div>
       <div></div>
     </div>
@@ -84,7 +138,7 @@ const handleClickOpenMap = () => {
       <div class="sick_two">
         <div class="lexend fz32">16:00</div>
         <div class="lexend fz32">Церемония</div>
-        <div class="stand fz14">Вы станете свителедями создания новой семьи - нашей семьи</div>
+        <div class="stand fz14">Вы станете свидетелями создания новой семьи - нашей семьи!</div>
       </div>
       <div class="sick_three">
         <div class="lexend fz32">17:00</div>
@@ -93,7 +147,7 @@ const handleClickOpenMap = () => {
       </div>
     </div>
     <div class="cards">
-      <div class="card">
+      <div class="card card1">
         <div class="card-circle"></div>
         <div class="card-img">
           <img src="./assets/location.jpg" alt="">
@@ -112,7 +166,7 @@ const handleClickOpenMap = () => {
       </div>
     </div>
     <div class="history">
-      <div class="card">
+      <div class="card card2">
         <div class="card-img">
           <img src="./assets/photo1.jpg" alt="">
         </div>
@@ -123,14 +177,10 @@ const handleClickOpenMap = () => {
     <div class="question">
       <div class="lexend fz36">Несколько просьб</div>
       <div class="question-list">
-        <div class="question-list-item">
-          <div class="flower_3" />
-          <div class="list-item-title lexend fz28">Цветы</div>
-          <div class="list-item-text stand fz14 f400">Если вы планировали взять с собой букет цветов, то бутылочка алкоголя с вашей подписью будет лучшей заменой, так как мы не успеем насладиться красотой цветов до отъезда в путешествие!</div>
-        </div>
-        <div class="question-list-item">
-          <div class="list-item-title lexend fz28">Дресс-код</div>
-          <div class="list-item-text stand fz14 f400">Мы будем очень признательны, если при выборе нарядов вы отдадите предпочтение нежным пастельным тонам и воздержитесь от ярких цветов.</div>
+        <div class="question-list-item" v-for="{ title, text, flower, id } in quests_options" :key="id" ref="quests">
+          <div class="flower_3" v-if="flower"/>
+          <div class="list-item-title lexend fz28">{{ title }}</div>
+          <div class="list-item-text stand fz14 f400">{{ text }}</div>
         </div>
       </div>
     </div>
@@ -146,6 +196,7 @@ const handleClickOpenMap = () => {
 </template>
 
 <style scoped>
+
 .main {
   position: relative;
   background-color: var(--color-bg-main);
@@ -233,6 +284,8 @@ const handleClickOpenMap = () => {
   padding-bottom: 75px;
   background-color: var(--color-bg-main);
   box-shadow: 0 -5px 10px 10px #FDFCF8;
+  position: relative;
+  z-index: 1;
 }
 
 .sheduale-weekdays {
@@ -250,16 +303,19 @@ const handleClickOpenMap = () => {
 }
 
 .color-bg {
-  color: var(--color-bg)
+  color: var(--color-bg);
 }
 
 .heart {
+  position: absolute;
+  width: 158px;
+    height: 162px;
+    right: -13px;
+    top: -8px;
   background-image: url('./assets/heart2.png');
   background-repeat: no-repeat;
-  background-size: 100px;
-  background-position: calc(100% - 50px);
+  background-size: contain;
   z-index: 1;
-  position: relative;
 }
 
 .heart::after {
@@ -278,7 +334,7 @@ const handleClickOpenMap = () => {
   rotate: -20deg;
   position: absolute;
   right: 50px;
-  bottom: -55px;
+  bottom: -45px;
 }
 
 .sicks {
