@@ -53,6 +53,25 @@ onMounted(() => {
     ease: "linear",
     repeat: -1,
   });
+
+  const loader = document.getElementById('loader');
+  const video = document.getElementById('video');
+
+  // Показываем лоудер при загрузке видео
+  video.addEventListener('loadstart', () => {
+      loader.style.display = 'block';
+  });
+
+  // Скрываем лоудер, когда видео загружено
+  video.addEventListener('canplaythrough', () => {
+      loader.style.display = 'none';
+  });
+
+  // Скрываем лоудер, если произошла ошибка
+  video.addEventListener('error', () => {
+      loader.style.display = 'none';
+      alert('Ошибка загрузки видео.');
+  });
 })
 
 const handleClickByVideo = () => {
@@ -94,8 +113,11 @@ const quests_options = [
   <div class="main">
     <div class="container-video">
       <div class="container-video__img">
-        <img src="./assets/start1.jpg" alt="photo">
-        <!-- <video id="video" ref="video" src="./assets/test.webm" preload autoplay></video> -->
+        <div id="loader" class="loader"></div>
+        <video preload autoplay id="video" ref="video">
+          <source src="./assets/video.mp4" type="video/mp4">
+          <!-- <source src="./assets/video.webm" type="video/webm"> -->
+        </video>
       </div>
       <div class="container-video__play" @click="handleClickByVideo">
         <i class="fa-solid fa-play"></i>
@@ -150,7 +172,7 @@ const quests_options = [
       <div class="card card1">
         <div class="card-circle"></div>
         <div class="card-img">
-          <img src="./assets/location.jpg" alt="">
+          <img src="./assets/location.webp" alt="">
         </div>
       </div>
       <div class="card-after">
@@ -168,7 +190,7 @@ const quests_options = [
     <div class="history">
       <div class="card card2">
         <div class="card-img">
-          <img src="./assets/photo1.jpg" alt="">
+          <img src="./assets/photo1.webp" alt="">
         </div>
         <div class="card-circle"></div>
       </div>
@@ -185,7 +207,7 @@ const quests_options = [
       </div>
     </div>
     <div class="lexend fz36 end-text">
-      <span class="lexend fz28">С &nbsp; любовью,</span> <br> Сабина&nbsp;&nbsp;&nbsp; & &nbsp;&nbsp;&nbsp;Кирилл
+      <span class="lexend fz28">С &nbsp; любовью,</span> <br> Сабина&nbsp;&nbsp; & &nbsp;&nbsp;Кирилл
     </div>
     <div class="lineTop" />
     <div class="flower4" />
@@ -239,6 +261,7 @@ const quests_options = [
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .container-video__play {
@@ -312,7 +335,7 @@ const quests_options = [
     height: 162px;
     right: -13px;
     top: -8px;
-  background-image: url('./assets/heart2.png');
+  background-image: url('./assets/heart2.webp');
   background-repeat: no-repeat;
   background-size: contain;
   z-index: 1;
@@ -320,17 +343,12 @@ const quests_options = [
 
 .heart::after {
   content: '';
-  background-image: url('./assets/jule.png');
+  background-image: url('./assets/jule.webp');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 200px;
   width: 100px;
   height: 100px;
-  /* font-family: "Great Vibes", cursive; */
-  /* font-weight: 400; */
-  /* font-style: normal; */
-  /* font-size: 28px; */
-  /* color: var(--color-bg); */
   rotate: -20deg;
   position: absolute;
   right: 50px;
@@ -510,7 +528,7 @@ const quests_options = [
   position: absolute;
   top: -80px;
   right: -80px;
-  background-image: url('./assets/flower.png');
+  background-image: url('./assets/flower.webp');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -523,7 +541,7 @@ const quests_options = [
   position: absolute;
     top: -210px;
     right: -194px;
-    background-image: url(/src/assets/flower4.png);
+    background-image: url(/src/assets/flower4.webp);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 400px;
@@ -537,7 +555,7 @@ const quests_options = [
   position: absolute;
   top: -140px;
   right: -200px;
-  background-image: url('./assets/flower3.png');
+  background-image: url('./assets/flower3.webp');
   background-position: center center;
   background-repeat: no-repeat;
   rotate: -20deg;
@@ -558,7 +576,7 @@ const quests_options = [
     top: 510px;
     rotate: 40deg;
     left: -415px;
-    background-image: url(/src/assets/line.png);
+    background-image: url(/src/assets/line.webp);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -571,7 +589,7 @@ const quests_options = [
     top: -310px;
     left: -255px;
     rotate: -234deg;
-    background-image: url(/src/assets/lineTop.png);
+    background-image: url(/src/assets/lineTop.webp);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -583,7 +601,7 @@ const quests_options = [
   position: absolute;
   top: 1820px;
   left: -188px;
-  background-image: url('/src/assets/text2.png');
+  background-image: url('/src/assets/text2.webp');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -593,9 +611,39 @@ const quests_options = [
 
 .end-text {
   text-align: center;
-  width: calc(100% - 80px);
+  width: calc(100% - 40px);
   margin: auto;
   white-space: preline;
   padding-bottom: 30px;
 }
+
+@media screen and (max-width: 425px) {
+  .end-text {
+    width: calc(100% - 80px);
+  }
+}
+
+.loader {
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform-origin: center;
+    width: 24px;
+    height: 24px;
+    border: 5px solid #801122;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: rotation 1s linear infinite;
+    display: none;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+    } 
 </style>
